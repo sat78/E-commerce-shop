@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <div>
+        <h3>Shopping Store</h3>
+        <form id="product-form">
+            <label>Selling Price:</label>
+            <input type="number" id="sellingprice">
+
+            <label>Product Name:</label>
+            <input type="text" id="product">
+
+            <label for="product">Choose a category:</label>
+            <select id="productcat">
+                <option value="electronics">Electronics</option>
+                <option value="food">Food</option>
+                <option value="skincare">Skincare</option>
+            </select>
+
+            <button type="submit">Add Product</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Selling Price</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+
+    <script>
+        const form = document.getElementById('product-form');
+        const productList = document.getElementById('product-list');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const sellingPrice = document.getElementById('sellingprice').value;
+            const productName = document.getElementById('product').value;
+            const productCategory = document.getElementById('productcat').value;
+
+            let obj={
+                sellingPrice,productName,productCategory
+            } 
+
+
+            axios.post("https://crudcrud.com/api/b271dca98aee4b76acc4d42241cd31c7/productDetails",obj)
+            .then(res=>console.log(res.data))
+            .catch(err=>console.log(err))
+
+            const newRow = document.createElement('tr');
+
+            newRow.innerHTML = `
+                <td>${sellingPrice}</td>
+                <td>${productName}</td>
+                <td>${productCategory}</td>
+                <td><button onclick="removeProduct(this)">Remove</button></td>
+            `;
+
+            productList.appendChild(newRow);
+
+            form.reset();
+        });
+
+        function removeProduct(button) {
+            productList.removeChild(button.parentNode.parentNode);
+        }
+    </script>
+</body>
+</html>
